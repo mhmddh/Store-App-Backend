@@ -3,6 +3,8 @@
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\UserController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,7 +23,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Login API:
 
+Route::post('login', [App\Http\Controllers\API\AuthController::class, 'login'])->name('login');
+
+//User API:
+Route::get('/user/{id}', [UserController::class, 'getUserDetails'])->name('user-details');
+
+Route::put('/update-user/{id}', [UserController::class, 'updateUser'])->name('update-user');
+
+Route::get('/change-password/{id}', [UserController::class, 'changePassword'])->name('change-password');
 
 //Product Apis :
 

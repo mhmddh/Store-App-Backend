@@ -21,7 +21,6 @@ class ProductController extends Controller
             $array[$i]['id'] = $product->id;
             $array[$i]['name'] = $product->name;
             $array[$i]['price'] = $product->price;
-            $array[$i]['product_image'] = $product->image;
             $array[$i]['brand'] = Brand::find($product['brand'])->first()->name;
             $array[$i]['brand_image'] = Brand::find($product['brand'])->first()->image;
             $array[$i]['category'] = Category::find($product['category'])->first()->name;
@@ -79,7 +78,7 @@ class ProductController extends Controller
         }
     }
 
-    public static function createProduct(Request $re`quest)
+    public static function createProduct(Request $request)
     {
         try {
             Product::create($request);
