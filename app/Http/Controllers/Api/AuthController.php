@@ -19,10 +19,11 @@ Login API
     {
         //User check
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $user = Auth::user();
+            $id = Auth::user()->id;
+            $user = User::find($id);
             //Setting login response
             $success['id'] = $user->id;
-            $success['token'] = $user->api_token;
+            $success['token'] = $user->createToken('auth-token')->plainTextToken;
             $success['name'] = $user->name;
 
             return response()->json([

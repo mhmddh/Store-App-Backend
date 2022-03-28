@@ -27,51 +27,52 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('login', [App\Http\Controllers\API\AuthController::class, 'login'])->name('login');
 
-//User API:
-Route::get('/user/{id}', [UserController::class, 'getUserDetails'])->name('user-details');
 
-Route::put('/update-user/{id}', [UserController::class, 'updateUser'])->name('update-user');
+Route::middleware(['auth:sanctum'])->group(function () {
+    //User API:
+    Route::get('/user/{id}', [UserController::class, 'getUserDetails'])->name('user-details');
 
-Route::get('/change-password/{id}', [UserController::class, 'changePassword'])->name('change-password');
+    Route::put('/update-user/{id}', [UserController::class, 'updateUser'])->name('update-user');
 
-//Product Apis :
+    Route::get('/change-password/{id}', [UserController::class, 'changePassword'])->name('change-password');
 
-Route::get('/products', [ProductController::class, 'getAllProducts'])->name('products');
+    //Product Apis :
 
-Route::post('/purchase', [ProductController::class, 'purchaseProduct'])->name('purchase');
+    Route::middleware('auth:sanctum')->get('/products', [ProductController::class, 'getAllProducts'])->name('products');
 
-Route::post('/create-product', [ProductController::class, 'createProduct'])->name('create-product');
+    Route::post('/purchase', [ProductController::class, 'purchaseProduct'])->name('purchase');
 
-Route::get('/products-history/{id}', [ProductController::class, 'getProductsHistory'])->name('products-history');
+    Route::post('/create-product', [ProductController::class, 'createProduct'])->name('create-product');
 
-Route::delete('/delete-product/{id}', [ProductController::class, 'deleteProduct'])->name('delete-product');
+    Route::get('/products-history/{id}', [ProductController::class, 'getProductsHistory'])->name('products-history');
 
-Route::get('/edit-product/{id}', [ProductController::class, 'getProduct'])->name('edit-product');
+    Route::delete('/delete-product/{id}', [ProductController::class, 'deleteProduct'])->name('delete-product');
 
-Route::put('/update-product/{id}', [ProductController::class, 'updateProduct'])->name('update-product');
+    Route::get('/edit-product/{id}', [ProductController::class, 'getProduct'])->name('edit-product');
 
-//Category Apis :
+    Route::put('/update-product/{id}', [ProductController::class, 'updateProduct'])->name('update-product');
 
-Route::get('/categories', [CategoryController::class, 'getAllCategories'])->name('categories');
+    //Category Apis :
 
-Route::post('/create-category', [CategoryController::class, 'createCategory'])->name('create-category');
+    Route::get('/categories', [CategoryController::class, 'getAllCategories'])->name('categories');
 
-Route::delete('/delete-category/{id}', [CategoryController::class, 'deleteCategory'])->name('delete-category');
+    Route::post('/create-category', [CategoryController::class, 'createCategory'])->name('create-category');
 
-Route::get('/edit-category/{id}', [CategoryController::class, 'getCategory'])->name('edit-category');
+    Route::delete('/delete-category/{id}', [CategoryController::class, 'deleteCategory'])->name('delete-category');
 
-Route::put('/update-category/{id}', [CategoryController::class, 'updateCategory'])->name('update-category');
+    Route::get('/edit-category/{id}', [CategoryController::class, 'getCategory'])->name('edit-category');
 
-//Brand Apis :
+    Route::put('/update-category/{id}', [CategoryController::class, 'updateCategory'])->name('update-category');
 
-Route::get('/brands', [BrandController::class, 'getAllBrands'])->name('brands');
+    //Brand Apis :
 
-Route::post('/create-brand', [BrandController::class, 'createBrand'])->name('create-brand');
+    Route::get('/brands', [BrandController::class, 'getAllBrands'])->name('brands');
 
-Route::delete('/delete-brand/{id}', [BrandController::class, 'deleteBrand'])->name('delete-brand');
+    Route::post('/create-brand', [BrandController::class, 'createBrand'])->name('create-brand');
 
-Route::get('/edit-brand/{id}', [BrandController::class, 'getBrand'])->name('edit-brand');
+    Route::delete('/delete-brand/{id}', [BrandController::class, 'deleteBrand'])->name('delete-brand');
 
-Route::put('/update-brand/{id}', [BrandController::class, 'updateBrand'])->name('update-brand');
+    Route::get('/edit-brand/{id}', [BrandController::class, 'getBrand'])->name('edit-brand');
 
-    
+    Route::put('/update-brand/{id}', [BrandController::class, 'updateBrand'])->name('update-brand');
+});

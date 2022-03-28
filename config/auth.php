@@ -40,13 +40,13 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'adminusers',
+            'hash' => true,
+        ],
     ],
 
-    'api' => [
-        'driver' => 'token',
-        'provider' => 'users',
-        'hash' => true,
-    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -70,6 +70,7 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+      
 
         // 'users' => [
         //     'driver' => 'database',
