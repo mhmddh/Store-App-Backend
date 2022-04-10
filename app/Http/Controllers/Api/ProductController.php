@@ -12,9 +12,15 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public static function getAllProducts()
+    public static function getAllProducts($limit, $page)
     {
-        $products = Product::all();
+        $all_products =  Product::all()->count();
+        $total_pages = ceil($all_products / $limit);
+        $products = Product::limit($limit)
+            ->orderBy('created_at', 'DESC')
+            ->offset($limit * ($page - 1))
+            ->get();
+
         $array = [];
         $i = 0;
         foreach ($products as  $product) {
@@ -26,7 +32,12 @@ class ProductController extends Controller
             $array[$i]['category'] = Category::find($product['category'])->first()->name;
             $i++;
         }
-        return response()->json($array);
+        return response()->json(
+            [
+                'pages' => $total_pages,
+                'products' => $array,
+            ]
+        );
     }
 
     public static function purchaseProduct(Request $request)

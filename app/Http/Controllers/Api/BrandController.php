@@ -10,10 +10,26 @@ use Illuminate\Support\Facades\Storage;
 
 class BrandController extends Controller
 {
-    public static function getAllBrands()
+    public static function getAllBrands($limit, $page)
     {
-        $brands = Brand::all();
-        return response()->json($brands);
+        if ($limit == 0 && $page == 0) {
+            $brands = Brand::all();
+            return response()->json($brands);
+        } else {
+            $all_brands =  Brand::all()->count();
+            $total_pages = ceil($all_brands / $limit);
+            $brands = Brand::limit($limit)
+                ->orderBy('created_at', 'DESC')
+                ->offset($limit * ($page - 1))
+                ->get();
+
+            return response()->json(
+                [
+                    'pages' => $total_pages,
+                    'brands' => $brands,
+                ]
+            );
+        }
     }
 
     public static function getBrand($id)

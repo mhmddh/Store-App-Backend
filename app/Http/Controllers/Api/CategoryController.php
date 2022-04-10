@@ -8,16 +8,32 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public static function getAllCategories()
+    public static function getAllCategories($limit, $page)
     {
-        $categories = Category::all();
-        return response()->json($categories);
+        if ($limit == 0 && $page == 0) {
+            $categories = Category::all();
+            return response()->json($categories);
+        } else {
+            $all_categories =  Category::all()->count();
+            $total_pages = ceil($all_categories / $limit);
+            $categories = Category::limit($limit)
+                ->orderBy('created_at', 'DESC')
+                ->offset($limit * ($page - 1))
+                ->get();
+
+            return response()->json(
+                [
+                    'pages' => $total_pages,
+                    'categories' => $categories,
+                ]
+            );
+        }
     }
 
     public static function getCategory($id)
     {
         $category = Category::find($id);
-       
+
         return response()->json(
             [
                 'id' => $category->id,
@@ -26,19 +42,16 @@ class CategoryController extends Controller
         );
     }
 
-    public static function updateCategory($id,Request $request){
+    public static function updateCategory($id, Request $request)
+    {
         $category = Category::find($id);
         $input = $request->all();
         try {
             $category->update($input);
             return response()->json('updated successfully !!');
-
         } catch (\Throwable $th) {
             return response()->json('cannot update');
         }
-
-       
-
     }
 
     public static function createCategory(Request $request)
@@ -60,6 +73,4 @@ class CategoryController extends Controller
         }
         return response()->json(['status' => 'failed']);
     }
-
-   
 }

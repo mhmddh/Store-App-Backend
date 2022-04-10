@@ -38,7 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //Product Apis :
 
-    Route::middleware('auth:sanctum')->get('/products', [ProductController::class, 'getAllProducts'])->name('products');
+    Route::middleware('auth:sanctum')->get('/products/{limit}/{page}', [ProductController::class, 'getAllProducts'])->name('products');
 
     Route::post('/purchase', [ProductController::class, 'purchaseProduct'])->name('purchase');
 
@@ -54,7 +54,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //Category Apis :
 
-    Route::get('/categories', [CategoryController::class, 'getAllCategories'])->name('categories');
+    Route::get('/categories/{limit}/{page}', [CategoryController::class, 'getAllCategories'])->name('categories');
 
     Route::post('/create-category', [CategoryController::class, 'createCategory'])->name('create-category');
 
@@ -66,7 +66,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //Brand Apis :
 
-    Route::get('/brands', [BrandController::class, 'getAllBrands'])->name('brands');
+    Route::get('/brands/{limi}/{page}', [BrandController::class, 'getAllBrands'])->name('brands');
 
     Route::post('/create-brand', [BrandController::class, 'createBrand'])->name('create-brand');
 
