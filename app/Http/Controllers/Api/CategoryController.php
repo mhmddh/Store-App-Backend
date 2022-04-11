@@ -8,16 +8,14 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public static function getAllCategories($limit, $page)
+    public static function getPaginatedCategories($limit, $page, $param, $order)
     {
-        if ($limit == 0 && $page == 0) {
-            $categories = Category::all();
-            return response()->json($categories);
-        } else {
+        try {
+            if ($param == 'Date') $param = 'created_at';
             $all_categories =  Category::all()->count();
             $total_pages = ceil($all_categories / $limit);
             $categories = Category::limit($limit)
-                ->orderBy('created_at', 'DESC')
+                ->orderBy($param, $order)
                 ->offset($limit * ($page - 1))
                 ->get();
 
@@ -27,8 +25,21 @@ class CategoryController extends Controller
                     'categories' => $categories,
                 ]
             );
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
         }
     }
+
+    public static function getAllCategories()
+    {
+        try {
+            $categories = Category::all();
+            return response()->json($categories);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
 
     public static function getCategory($id)
     {

@@ -22,7 +22,8 @@ class Brand extends Model
     {
         $brand = new Brand();
         $brand->name = $request->get('name');
-        $brand->image = 'url';
+        $brand->image = '';
         $brand->save();
+        return $brand;
     }
 }
