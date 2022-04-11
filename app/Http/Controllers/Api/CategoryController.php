@@ -43,25 +43,30 @@ class CategoryController extends Controller
 
     public static function getCategory($id)
     {
-        $category = Category::find($id);
+        try {
+            $category = Category::find($id);
 
-        return response()->json(
-            [
-                'id' => $category->id,
-                'name' => $category->name,
-            ]
-        );
+            return response()->json(
+                [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                ]
+            );
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
     }
 
     public static function updateCategory($id, Request $request)
     {
-        $category = Category::find($id);
-        $input = $request->all();
+
         try {
+            $category = Category::find($id);
+            $input = $request->all();
             $category->update($input);
             return response()->json('updated successfully !!');
-        } catch (\Throwable $th) {
-            return response()->json('cannot update');
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
         }
     }
 
@@ -70,18 +75,21 @@ class CategoryController extends Controller
         try {
             Category::create($request);
             return response('category created succesfully');
-        } catch (\Throwable $th) {
-            return response('failed to update');
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
         }
     }
 
     public static function deleteCategory($id)
     {
-        $category = Category::find($id);
-        if ($category) {
-            $category->delete();
-            return response()->json(['status' => 'succesfully deleted']);
+        try {
+            $category = Category::find($id);
+            if ($category) {
+                $category->delete();
+                return response()->json(['status' => 'succesfully deleted']);
+            }
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
         }
-        return response()->json(['status' => 'failed']);
     }
 }

@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public static function getAllProducts($limit, $page, $param, $order)
+    public static function getPaginatedProducts($limit, $page, $param, $order)
     {
 
         try {
@@ -53,41 +53,29 @@ class ProductController extends Controller
         }
     }
 
-    public static function purchaseProduct(Request $request)
-    {
-        try {
-            ClientProduct::purchase($request);
-            return response()->json(['status' => 'success']);
-        } catch (\Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()]);
-        }
-    }
 
-    public static function getProductsHistory($client_id)
-    {
-        $client = Client::where('id', $client_id)->first();
-        $products = $client->products;
-        return response()->json($products);
-    }
 
     public static function getProduct($id)
     {
-        $product = Product::find($id);
-        $category = $product->category;
-        $brand = $product->brand;
-        return response()->json(
-            [
-                'name' => $product->name,
-                'image' => $product->image,
-                'category' => $category['name'],
-                'category_id' => $category['id'],
-                'price' => $product->price,
-                'brand' => $brand['name'],
-                'brand_id' => $brand['id'],
-                'brand_image' => $brand['image'],
-
-            ]
-        );
+        try {
+            $product = Product::find($id);
+            $category = $product->category;
+            $brand = $product->brand;
+            return response()->json(
+                [
+                    'name' => $product->name,
+                    'image' => $product->image,
+                    'category' => $category['name'],
+                    'category_id' => $category['id'],
+                    'price' => $product->price,
+                    'brand' => $brand['name'],
+                    'brand_id' => $brand['id'],
+                    'brand_image' => $brand['image'],
+                ]
+            );
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
     }
 
     public static function updateProduct($id, Request $request)
@@ -107,18 +95,42 @@ class ProductController extends Controller
         try {
             Product::create($request);
             return response('product created succesfully');
-        } catch (\Throwable $th) {
-            return response('failed to update');
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
         }
     }
 
     public static function deleteProduct($id)
     {
-        $product = Product::find($id);
-        if ($product) {
-            $product->delete();
-            return response()->json(['status' => 'succesfully deleted']);
+        try {
+            $product = Product::find($id);
+            if ($product) {
+                $product->delete();
+                return response()->json(['status' => 'succesfully deleted']);
+            }
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
         }
-        return response()->json(['status' => 'failed']);
+    }
+
+    public static function purchaseProduct(Request $request)
+    {
+        try {
+            ClientProduct::purchase($request);
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    public static function getProductsHistory($client_id)
+    {
+        try {
+            $client = Client::where('id', $client_id)->first();
+            $products = $client->products;
+            return response()->json($products);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
     }
 }

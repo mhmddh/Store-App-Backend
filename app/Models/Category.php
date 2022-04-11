@@ -20,4 +20,6 @@ class Category extends Model
         $category->name =$request->get('name');
         $category->save();
     }
+
+    
 }

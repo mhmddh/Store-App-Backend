@@ -43,7 +43,8 @@ class BrandController extends Controller
         }
     }
 
-    public static function getAllBrands(){
+    public static function getAllBrands()
+    {
         try {
             $brands = Brand::all();
             return response()->json($brands);
@@ -73,9 +74,9 @@ class BrandController extends Controller
 
     public static function updateBrand($id, Request $request)
     {
-        $brand = Brand::find($id);
-        $input = $request->all();
         try {
+            $brand = Brand::find($id);
+            $input = $request->all();
             $brand->update($input);
             return response()->json('updated successfully !!');
         } catch (\Exception $exception) {
@@ -116,11 +117,15 @@ class BrandController extends Controller
     }
     public static function deleteBrand($id)
     {
-        $brand = Brand::find($id);
-        if ($brand) {
-            $brand->delete();
-            return response()->json('succesfully deleted');
+        try {
+            $brand = Brand::find($id);
+            if ($brand) {
+                $brand->delete();
+                return response()->json('succesfully deleted');
+            }
+            return response()->json('failed');
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
         }
-        return response()->json('failed');
     }
 }

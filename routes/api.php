@@ -38,7 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //Product Apis :
 
-    Route::middleware('auth:sanctum')->get('/products/{limit}/{page}/{param?}/{order?}', [ProductController::class, 'getAllProducts'])->name('products');
+    Route::get('/products/{limit}/{page}/{param?}/{order?}', [ProductController::class, 'getPaginatedProducts'])->name('products');
 
     Route::post('/purchase', [ProductController::class, 'purchaseProduct'])->name('purchase');
 
