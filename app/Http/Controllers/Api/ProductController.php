@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Client;
 use App\Models\ClientProduct;
 use App\Models\Product;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -25,27 +26,13 @@ class ProductController extends Controller
                 ->orderBy($param, $order)
                 ->offset($limit * ($page - 1))
                 ->get();
-
-            $array = [];
-            $i = 0;
-            foreach ($products as  $product) {
-                $brand_image = Brand::find($product['brand'])->first()->image;
-                if ($brand_image != '' | $brand_image != null) {
-                    $brand_image = "http://127.0.0.1:8000" . $brand_image;
-                }
-                $array[$i]['id'] = $product->id;
-                $array[$i]['name'] = $product->name;
-                $array[$i]['price'] = $product->price;
-                $array[$i]['brand'] = Brand::find($product['brand'])->first()->name;
-                $array[$i]['brand_image'] = $brand_image;
-                $array[$i]['category'] = Category::find($product['category'])->first()->name;
-                $array[$i]['created_at'] = $product->created_at->format('m/d/Y');
-                $i++;
-            }
+            $nbOfItems = count(Product::all());
+            $array = Product::getResponseArray($products);
             return response()->json(
                 [
                     'pages' => $total_pages,
                     'products' => $array,
+                    'nbOfItems' => $nbOfItems,
                 ]
             );
         } catch (\Exception $exception) {
@@ -110,6 +97,36 @@ class ProductController extends Controller
             }
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    public static function searchProduct($key, $value, $limit, $page, $param, $order)
+    {
+        if ($param == 'Date') {
+            $param = 'created_at';
+        }
+        $products = Product::where($key, 'LIKE', '%' . $value . '%')
+            ->limit($limit)
+            ->orderBy($param, $order)
+            ->offset($limit * ($page - 1))
+            ->get();
+        $all_products = Product::where($key, 'LIKE', '%' . $value . '%')->get();
+        $nbOfItems = count($all_products);
+
+        $total_pages = ceil(count($all_products) / $limit);
+        // return response()->json(count($products));
+        if (count($products)) {
+            $array = Product::getResponseArray($products);
+            return response()->json(
+                [
+                    'pages' => $total_pages,
+                    'products' => $array,
+                    'nbOfItems' => $nbOfItems,
+                ]
+            );
+        } else {
+
+            return response()->json(['Result' => 'No Data found'], 404);
         }
     }
 

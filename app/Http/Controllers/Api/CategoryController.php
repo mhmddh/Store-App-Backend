@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -18,11 +19,13 @@ class CategoryController extends Controller
                 ->orderBy($param, $order)
                 ->offset($limit * ($page - 1))
                 ->get();
-
+            $nbOfItems = count(Product::all());
             return response()->json(
                 [
                     'pages' => $total_pages,
                     'categories' => $categories,
+                    'nbOfItems' => $nbOfItems
+
                 ]
             );
         } catch (\Exception $exception) {
@@ -88,6 +91,33 @@ class CategoryController extends Controller
                 $category->delete();
                 return response()->json(['status' => 'succesfully deleted']);
             }
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    public static function searchCategory($key, $value, $limit, $page, $param, $order)
+    {
+        try {
+            if ($param == 'Date') {
+                $param = 'created_at';
+            }
+            $categories = Category::where($key, 'LIKE', '%' . $value . '%')
+                ->limit($limit)
+                ->orderBy($param, $order)
+                ->offset($limit * ($page - 1))
+                ->get();
+            $all_categories = Category::where($key, 'LIKE', '%' . $value . '%')->get();
+            $nbOfItems = count($all_categories);
+            $total_pages = ceil(count($categories) / $limit);
+            return response()->json(
+                [
+                    'pages' => $total_pages,
+                    'categories' => $categories,
+                    'nbOfItems' => $nbOfItems
+
+                ]
+            );
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }

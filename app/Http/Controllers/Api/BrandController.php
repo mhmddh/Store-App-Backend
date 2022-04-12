@@ -24,7 +24,7 @@ class BrandController extends Controller
                     ->orderBy($param, $order)
                     ->offset($limit * ($page - 1))
                     ->get();
-
+                $nbOfItems = count(Brand::all());
                 foreach ($brands as $brand) {
                     if ($brand->image != '' | $brand->image != null) {
                         $brand->image = "http://127.0.0.1:8000" . $brand->image;
@@ -35,6 +35,7 @@ class BrandController extends Controller
                     [
                         'pages' => $total_pages,
                         'brands' => $brands,
+                        'nbOfItems' => $nbOfItems
                     ]
                 );
             }
@@ -89,7 +90,7 @@ class BrandController extends Controller
         try {
             $brand = Brand::create($request);
             return response()->json([
-                "message" => "File successfully uploaded",
+                "message" => "Brand successfully created",
                 "brand_id" => $brand->id
             ]);
         } catch (\Exception $exception) {
@@ -124,6 +125,40 @@ class BrandController extends Controller
                 return response()->json('succesfully deleted');
             }
             return response()->json('failed');
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    public static function searchBrand($key, $value, $limit, $page, $param, $order)
+    {
+        try {
+            if ($param == 'Date') {
+                $param = 'created_at';
+            }
+            $brands = Brand::where($key, 'LIKE', '%' . $value . '%')
+                ->limit($limit)
+                ->orderBy($param, $order)
+                ->offset($limit * ($page - 1))
+                ->get();
+                
+            foreach ($brands as $brand) {
+                if ($brand->image != '' | $brand->image != null) {
+                    $brand->image = "http://127.0.0.1:8000" . $brand->image;
+                }
+            }
+
+            $all_brands = Brand::where($key, 'LIKE', '%' . $value . '%')->get();
+            $nbOfItems = count($all_brands);
+            $total_pages = ceil(count($brands) / $limit);
+
+            return response()->json(
+                [
+                    'pages' => $total_pages,
+                    'brands' => $brands,
+                    'nbOfItems' => $nbOfItems
+                ]
+            );
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }

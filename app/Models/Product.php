@@ -45,5 +45,25 @@ class Product extends Model
         $product->save();
     }
 
+    public static function getResponseArray($products){
+        $array = [];
+        $i = 0;
+        foreach ($products as  $product) {
+            $brand_image = Brand::find($product['brand'])->first()->image;
+            if ($brand_image != '' | $brand_image != null) {
+                $brand_image = "http://127.0.0.1:8000" . $brand_image;
+            }
+            $array[$i]['id'] = $product->id;
+            $array[$i]['name'] = $product->name;
+            $array[$i]['price'] = $product->price;
+            $array[$i]['brand'] = Brand::find($product['brand'])->first()->name;
+            $array[$i]['brand_image'] = $brand_image;
+            $array[$i]['category'] = Category::find($product['category'])->first()->name;
+            $array[$i]['created_at'] = $product->created_at->format('m/d/Y');
+            $i++;
+        }
+        return $array;
+    }
+
  
 }
