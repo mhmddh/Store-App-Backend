@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -37,14 +38,15 @@ class UserController extends Controller
 
     public static function changePassword($id, Request $request)
     {
-        $user = User::find($id);
-        $password = $request->password;
-        $new_password = $request->new_password;
+
         try {
-            if($password == $user->password){
-                $user->password =  $new_password;
+            $user = User::find($id);
+            if (Hash::check($request->oldPassword, $user->password)) {
+                $user->password =  Hash::make($request->confirmPassword);
+                $user->save();
+                return response()->json('Password Changed successfully !!');
             }
-            return response()->json('Password Changed successfully !!');
+            return response()->json('Incorrect Password');
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }

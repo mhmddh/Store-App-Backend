@@ -34,7 +34,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::put('/update-user/{id}', [UserController::class, 'updateUser'])->name('update-user');
 
-    Route::get('/change-password/{id}', [UserController::class, 'changePassword'])->name('change-password');
+    Route::post('/user/{id}/change-password', [UserController::class, 'changePassword'])->name('change-password');
 
     //Product Apis :
 
@@ -58,7 +58,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/categories', [CategoryController::class, 'getPaginatedCategories'])->name('categories');
 
-    Route::get('/all-categories', [CategoryController::class, 'getAllCategories'])->name('categories');
+    Route::get('/all-categories', [CategoryController::class, 'getAllCategories'])->name('all-categories');
 
 
     Route::post('/create-category', [CategoryController::class, 'createCategory'])->name('create-category');
@@ -75,7 +75,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/brands', [BrandController::class, 'getPaginatedBrands'])->name('brands');
 
-    Route::get('/all-brands', [BrandController::class, 'getAllBrands'])->name('brands');
+    Route::get('/all-brands', [BrandController::class, 'getAllBrands'])->name('all-brands');
 
 
     Route::post('/create-brand', [BrandController::class, 'createBrand'])->name('create-brand');
