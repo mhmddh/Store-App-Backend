@@ -38,7 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //Product Apis :
 
-    Route::get('/products/{limit}/{page}/{param}/{order}', [ProductController::class, 'getPaginatedProducts'])->name('products');
+    Route::get('/products', [ProductController::class, 'getPaginatedProducts'])->name('products');
 
     Route::post('/purchase', [ProductController::class, 'purchaseProduct'])->name('purchase');
 
@@ -52,13 +52,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::put('/update-product/{id}', [ProductController::class, 'updateProduct'])->name('update-product');
 
-    Route::get('/search-product/{key}/{value}/{limit}/{page}/{param}/{order}', [ProductController::class, 'searchProduct'])->name('search-product');
+    Route::get('/search-product', [ProductController::class, 'searchProduct'])->name('search-product');
 
     //Category Apis :
 
-    Route::get('/categories/{limit}/{page}/{param}/{order}', [CategoryController::class, 'getPaginatedCategories'])->name('categories');
+    Route::get('/categories', [CategoryController::class, 'getPaginatedCategories'])->name('categories');
 
-    Route::get('/categories', [CategoryController::class, 'getAllCategories'])->name('categories');
+    Route::get('/all-categories', [CategoryController::class, 'getAllCategories'])->name('categories');
 
 
     Route::post('/create-category', [CategoryController::class, 'createCategory'])->name('create-category');
@@ -69,13 +69,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::put('/update-category/{id}', [CategoryController::class, 'updateCategory'])->name('update-category');
 
-    Route::get('/search-category/{key}/{value}/{limit}/{page}/{param}/{order}', [CategoryController::class, 'searchCategory'])->name('search-catehory');
+    Route::get('/search-category', [CategoryController::class, 'searchCategory'])->name('search-catehory');
 
     //Brand Apis :
 
-    Route::get('/brands/{limi}/{page}/{param}/{order?}', [BrandController::class, 'getPaginatedBrands'])->name('brands');
+    Route::get('/brands', [BrandController::class, 'getPaginatedBrands'])->name('brands');
 
-    Route::get('/brands', [BrandController::class, 'getAllBrands'])->name('brands');
+    Route::get('/all-brands', [BrandController::class, 'getAllBrands'])->name('brands');
 
 
     Route::post('/create-brand', [BrandController::class, 'createBrand'])->name('create-brand');
@@ -88,5 +88,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/upload-brand-file/{id}', [BrandController::class, 'uploadFile'])->name('upload-brand-logo');
 
-    Route::get('/search-brand/{key}/{value}/{limit}/{page}/{param}/{order}', [BrandController::class, 'searchBrand'])->name('search-brand');
+    Route::get('/search-brand', [BrandController::class, 'searchBrand'])->name('search-brand');
 });

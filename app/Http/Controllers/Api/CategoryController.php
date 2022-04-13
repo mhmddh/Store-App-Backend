@@ -9,9 +9,13 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public static function getPaginatedCategories($limit, $page, $param, $order)
+    public static function getPaginatedCategories(Request $request)
     {
         try {
+            $limit = $request->limit;
+            $page = $request->page;
+            $param = $request->param;
+            $order = $request->order;
             if ($param == 'Date') $param = 'created_at';
             $all_categories =  Category::all()->count();
             $total_pages = ceil($all_categories / $limit);
@@ -96,9 +100,15 @@ class CategoryController extends Controller
         }
     }
 
-    public static function searchCategory($key, $value, $limit, $page, $param, $order)
+    public static function searchCategory(Request $request)
     {
         try {
+            $key = $request->key;
+            $value = $request->value;
+            $limit = $request->limit;
+            $page = $request->page;
+            $param = $request->param;
+            $order = $request->order;
             if ($param == 'Date') {
                 $param = 'created_at';
             }

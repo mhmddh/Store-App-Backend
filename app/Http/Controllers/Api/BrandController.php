@@ -8,35 +8,34 @@ use Illuminate\Http\Request;
 
 class BrandController extends Controller
 {
-    public static function getPaginatedBrands($limit, $page, $param, $order)
+    public static function getPaginatedBrands(Request $request)
     {
         try {
+            $limit = $request->limit;
+            $page = $request->page;
+            $param = $request->param;
+            $order = $request->order;
             if ($param == 'Date') $param = 'created_at';
-            if ($limit == 0 && $page == 0) {
-                $brands = Brand::all();
-                return response()->json($brands);
-            } else {
-                $all_brands =  Brand::all()->count();
-                $total_pages = ceil($all_brands / $limit);
-                $brands = Brand::limit($limit)
-                    ->orderBy($param, $order)
-                    ->offset($limit * ($page - 1))
-                    ->get();
-                $nbOfItems = count(Brand::all());
-                foreach ($brands as $brand) {
-                    if ($brand->image != '' | $brand->image != null) {
-                        $brand->image = "http://127.0.0.1:8000" . $brand->image;
-                    }
+            $all_brands =  Brand::all()->count();
+            $total_pages = ceil($all_brands / $limit);
+            $brands = Brand::limit($limit)
+                ->orderBy($param, $order)
+                ->offset($limit * ($page - 1))
+                ->get();
+            $nbOfItems = count(Brand::all());
+            foreach ($brands as $brand) {
+                if ($brand->image != '' | $brand->image != null) {
+                    $brand->image = "http://127.0.0.1:8000" . $brand->image;
                 }
-
-                return response()->json(
-                    [
-                        'pages' => $total_pages,
-                        'brands' => $brands,
-                        'nbOfItems' => $nbOfItems
-                    ]
-                );
             }
+
+            return response()->json(
+                [
+                    'pages' => $total_pages,
+                    'brands' => $brands,
+                    'nbOfItems' => $nbOfItems
+                ]
+            );
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
@@ -128,9 +127,15 @@ class BrandController extends Controller
         }
     }
 
-    public static function searchBrand($key, $value, $limit, $page, $param, $order)
+    public static function searchBrand(Request $request)
     {
         try {
+            $key = $request->key;
+            $value = $request->value;
+            $limit = $request->limit;
+            $page = $request->page;
+            $param = $request->param;
+            $order = $request->order;
             if ($param == 'Date') {
                 $param = 'created_at';
             }
@@ -139,7 +144,7 @@ class BrandController extends Controller
                 ->orderBy($param, $order)
                 ->offset($limit * ($page - 1))
                 ->get();
-                
+
             foreach ($brands as $brand) {
                 if ($brand->image != '' | $brand->image != null) {
                     $brand->image = "http://127.0.0.1:8000" . $brand->image;

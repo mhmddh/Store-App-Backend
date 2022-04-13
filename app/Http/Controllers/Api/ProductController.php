@@ -13,10 +13,14 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public static function getPaginatedProducts($limit, $page, $param, $order)
+    public static function getPaginatedProducts(Request $request)
     {
 
         try {
+            $limit = $request->limit;
+            $page = $request->page;
+            $param = $request->param;
+            $order = $request->order;
             if ($param == 'Date') {
                 $param = 'created_at';
             }
@@ -100,33 +104,44 @@ class ProductController extends Controller
         }
     }
 
-    public static function searchProduct($key, $value, $limit, $page, $param, $order)
+    public static function searchProduct(Request $request)
     {
-        if ($param == 'Date') {
-            $param = 'created_at';
-        }
-        $products = Product::where($key, 'LIKE', '%' . $value . '%')
-            ->limit($limit)
-            ->orderBy($param, $order)
-            ->offset($limit * ($page - 1))
-            ->get();
-        $all_products = Product::where($key, 'LIKE', '%' . $value . '%')->get();
-        $nbOfItems = count($all_products);
 
-        $total_pages = ceil(count($all_products) / $limit);
-        // return response()->json(count($products));
-        if (count($products)) {
-            $array = Product::getResponseArray($products);
-            return response()->json(
-                [
-                    'pages' => $total_pages,
-                    'products' => $array,
-                    'nbOfItems' => $nbOfItems,
-                ]
-            );
-        } else {
+        try {
+            $key = $request->key;
+            $value = $request->value;
+            $limit = $request->limit;
+            $page = $request->page;
+            $param = $request->param;
+            $order = $request->order;
+            if ($param == 'Date') {
+                $param = 'created_at';
+            }
+            $products = Product::where($key, 'LIKE', '%' . $value . '%')
+                ->limit($limit)
+                ->orderBy($param, $order)
+                ->offset($limit * ($page - 1))
+                ->get();
+            $all_products = Product::where($key, 'LIKE', '%' . $value . '%')->get();
+            $nbOfItems = count($all_products);
 
-            return response()->json(['Result' => 'No Data found'], 404);
+            $total_pages = ceil(count($all_products) / $limit);
+            // return response()->json(count($products));
+            if (count($products)) {
+                $array = Product::getResponseArray($products);
+                return response()->json(
+                    [
+                        'pages' => $total_pages,
+                        'products' => $array,
+                        'nbOfItems' => $nbOfItems,
+                    ]
+                );
+            } else {
+
+                return response()->json(['Result' => 'No Data found'], 404);
+            }
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
         }
     }
 
