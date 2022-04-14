@@ -44,11 +44,11 @@ class UserController extends Controller
             if (Hash::check($request->oldPassword, $user->password)) {
                 $user->password =  Hash::make($request->confirmPassword);
                 $user->save();
-                return response()->json('Password Changed successfully !!');
+                return response()->json(['status' => 'success', 'message' => 'Password Changed Successfully !!']);
             }
-            return response()->json('Incorrect Password');
+            return response()->json(['status' => 'failed', 'message' => 'Incorrect Password !!']);
         } catch (\Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()]);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage()]);
         }
     }
 }
