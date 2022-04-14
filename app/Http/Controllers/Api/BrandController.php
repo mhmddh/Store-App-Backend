@@ -28,14 +28,19 @@ class BrandController extends Controller
                     $brand->image = "http://127.0.0.1:8000" . $brand->image;
                 }
             }
-
-            return response()->json(
-                [
-                    'pages' => $total_pages,
-                    'brands' => $brands,
-                    'nbOfItems' => $nbOfItems
-                ]
-            );
+            if($all_brands){
+                return response()->json(
+                    [
+                        'pages' => $total_pages,
+                        'brands' => $brands,
+                        'nbOfItems' => $nbOfItems
+                    ]
+                );
+            }else{
+                return response()->json([
+                    'message' => 'No Data found', 'nbOfItems' => $nbOfItems,
+                ]);
+            }
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
@@ -154,14 +159,19 @@ class BrandController extends Controller
             $all_brands = Brand::where($key, 'LIKE', '%' . $value . '%')->get();
             $nbOfItems = count($all_brands);
             $total_pages = ceil(count($brands) / $limit);
-
-            return response()->json(
-                [
-                    'pages' => $total_pages,
-                    'brands' => $brands,
-                    'nbOfItems' => $nbOfItems
-                ]
-            );
+            if (count($brands)) {
+                return response()->json(
+                    [
+                        'pages' => $total_pages,
+                        'brands' => $brands,
+                        'nbOfItems' => $nbOfItems
+                    ]
+                );
+            } else {
+                return response()->json([
+                    'message' => 'No Data found', 'nbOfItems' => $nbOfItems,
+                ]);
+            }
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }

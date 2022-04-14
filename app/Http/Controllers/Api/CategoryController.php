@@ -24,14 +24,20 @@ class CategoryController extends Controller
                 ->offset($limit * ($page - 1))
                 ->get();
             $nbOfItems = count(Product::all());
-            return response()->json(
-                [
-                    'pages' => $total_pages,
-                    'categories' => $categories,
-                    'nbOfItems' => $nbOfItems
-
-                ]
-            );
+            if ($all_categories) {
+                return response()->json(
+                    [
+                        'pages' => $total_pages,
+                        'categories' => $categories,
+                        'nbOfItems' => $nbOfItems,
+                        'message' => $nbOfItems.' results !!'
+                    ]
+                );
+            } else {
+                return response()->json([
+                    'message' => 'No Data found', 'nbOfItems' => $nbOfItems,
+                ]);
+            }
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
@@ -120,14 +126,19 @@ class CategoryController extends Controller
             $all_categories = Category::where($key, 'LIKE', '%' . $value . '%')->get();
             $nbOfItems = count($all_categories);
             $total_pages = ceil(count($categories) / $limit);
-            return response()->json(
-                [
-                    'pages' => $total_pages,
-                    'categories' => $categories,
-                    'nbOfItems' => $nbOfItems
-
-                ]
-            );
+            if(count($categories)){
+                return response()->json(
+                    [
+                        'pages' => $total_pages,
+                        'categories' => $categories,
+                        'nbOfItems' => $nbOfItems
+                    ]
+                );
+            }else{
+                return response()->json([
+                    'message' => 'No Data found !!', 'nbOfItems' => $nbOfItems,
+                ]);
+            }
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }

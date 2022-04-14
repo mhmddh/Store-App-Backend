@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Client;
 use App\Models\ClientProduct;
 use App\Models\Product;
-use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -32,13 +29,19 @@ class ProductController extends Controller
                 ->get();
             $nbOfItems = count(Product::all());
             $array = Product::getResponseArray($products);
-            return response()->json(
-                [
-                    'pages' => $total_pages,
-                    'products' => $array,
-                    'nbOfItems' => $nbOfItems,
-                ]
-            );
+            if ($all_products) {
+                return response()->json(
+                    [
+                        'pages' => $total_pages,
+                        'products' => $array,
+                        'nbOfItems' => $nbOfItems,
+                    ]
+                );
+            } else {
+                return response()->json([
+                    'message' => 'No Data found', 'nbOfItems' => $nbOfItems,
+                ]);
+            }
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
@@ -138,7 +141,9 @@ class ProductController extends Controller
                 );
             } else {
 
-                return response()->json(['Result' => 'No Data found'], 404);
+                return response()->json([
+                    'message' => 'No Data found !!', 'nbOfItems' => $nbOfItems,
+                ]);
             }
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
