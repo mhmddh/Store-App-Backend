@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class BrandController extends Controller
 {
@@ -28,7 +29,7 @@ class BrandController extends Controller
                     $brand->image = "http://127.0.0.1:8000" . $brand->image;
                 }
             }
-            if($all_brands){
+            if ($all_brands) {
                 return response()->json(
                     [
                         'pages' => $total_pages,
@@ -36,7 +37,7 @@ class BrandController extends Controller
                         'nbOfItems' => $nbOfItems
                     ]
                 );
-            }else{
+            } else {
                 return response()->json([
                     'message' => 'No Data found', 'nbOfItems' => $nbOfItems,
                 ]);
@@ -122,13 +123,25 @@ class BrandController extends Controller
     {
         try {
             $brand = Brand::find($id);
+            if (file_exists(public_path($brand->image))) {
+                unlink(public_path($brand->image));
+            }
             if ($brand) {
                 $brand->delete();
-                return response()->json('succesfully deleted');
+                return response()->json([
+                    "success" => true,
+                    "message" => "Brand successfully deleted",
+                ]);
             }
-            return response()->json('failed');
+            return response()->json([
+                "success" => false,
+                "message" => "Cannot find this brand",
+            ]);
         } catch (\Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()]);
+            return response()->json([
+                "success" => false,
+                "message" => $exception->getMessage(),
+            ]);
         }
     }
 
