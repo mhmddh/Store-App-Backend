@@ -106,7 +106,7 @@ class BrandController extends Controller
             $file = $request->file('file');
             $extension = $file->extension();
             $filename = "brand" . $id . "." . $extension;
-            $request->file('file')->storeAs("public", $filename);
+            $request->file('file')->storeAs("public/brands", $filename);
             $brand->image = "/storage/" . $filename;
             $brand->save();
             return response()->json([

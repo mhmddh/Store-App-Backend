@@ -16,12 +16,16 @@ class Product extends Model
         'price',
         'category_id',
         'brand_id',
-        'image'
     ];
     //Relations :
     public function clients()
     {
         return $this->belongsToMany(Client::class);
+    }
+
+    public function files()
+    {
+        return $this->belongsToMany(File::class);
     }
 
     public function category()
@@ -35,17 +39,34 @@ class Product extends Model
     }
 
     //services:
-    public function create($request){
+    public function create($request)
+    {
         $product = new Product();
-        $product->name =$request->get('name');
-        $product->price =$request->get('price');
-        $product->image ='url';
-        $product->category_id =$request->get('category');
-        $product->brand_id =$request->get('brand');
+        $product->name = $request->get('name');
+        $product->price = $request->get('price');
+        $product->category_id = $request->get('category');
+        $product->brand_id = $request->get('brand');
         $product->save();
+        return $product;
     }
 
-    public static function getResponseArray($products){
+    public function uploadFile($id, $request)
+    {
+        foreach ($request->file('file') as $file) {
+            $filemodel = new File();
+            $filename = $file->getClientOriginalName();
+            $file->storeAs('public/products/product' . $id, $filename);
+            $filemodel->name = $filename;
+            $filemodel->model = 'product';
+            $filemodel->parameter = $id;
+            $filemodel->url = 'storage/products/product' . $id . '/' . $filename;
+            $filemodel->save();
+        }
+        $this->save();
+    }
+
+    public static function getResponseArray($products)
+    {
         $array = [];
         $i = 0;
         foreach ($products as  $product) {
@@ -64,6 +85,4 @@ class Product extends Model
         }
         return $array;
     }
-
- 
 }

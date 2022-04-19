@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\ClientProduct;
+use App\Models\File;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -55,14 +56,24 @@ class ProductController extends Controller
             $product = Product::find($id);
             $category = $product->category;
             $brand = $product->brand;
+            $array = [];
+            $ids = [];
+            $files = File::where(['model' => 'product', 'parameter' => $product->id])
+                ->get();
+            foreach ($files as $file) {
+                $array[] = "http://127.0.0.1:8000/" . $file->url;
+                $ids[] = $file->id;
+            }
+
             return response()->json(
                 [
                     'name' => $product->name,
-                    'image' => $product->image,
                     'category' => $category['name'],
                     'category_id' => $category['id'],
                     'price' => $product->price,
                     'brand' => $brand['name'],
+                    'images' => $array,
+                    "images_ids" => $ids,
                     'brand_id' => $brand['id'],
                     'brand_image' => $brand['image'],
                 ]
@@ -87,11 +98,41 @@ class ProductController extends Controller
     public static function createProduct(Request $request)
     {
         try {
-            Product::create($request);
-            return response('product created succesfully');
+            $product = Product::create($request);
+            return response()->json([
+                "message" => "Product successfully created",
+                "product_id" => $product->id,
+                "images" => $product->images
+
+            ]);
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
+    }
+
+    public static function uploadFile($id, Request $request)
+    {
+
+        try {
+            $product = Product::find($id);
+            $product->uploadFile($id, $request);
+            return response()->json([
+                "success" => true,
+                "message" => "File successfully uploaded",
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    public static function deleteFile($id)
+    {
+        $file = File::find($id)->first();
+        $file->delete();
+        if(file_exists($file->url)){
+            unlink($file->url);
+        } 
+        return response()->json(['status' => 'image deleted']);
     }
 
     public static function deleteProduct($id)

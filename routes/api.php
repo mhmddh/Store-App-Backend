@@ -54,6 +54,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/search-product', [ProductController::class, 'searchProduct'])->name('search-product');
 
+    Route::post('/upload-product-files/{id}', [ProductController::class, 'uploadFile'])->name('upload-product-files');
+
+    Route::delete('/delete-product-file/{id}', [ProductController::class, 'deleteFile'])->name('delete-file');
+
     //Category Apis :
 
     Route::get('/categories', [CategoryController::class, 'getPaginatedCategories'])->name('categories');
