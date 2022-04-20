@@ -14,8 +14,11 @@ class File extends Model
 
     protected $fillable = [
         'name',
-        'model',
-        'key',
-        'parameter',
+        'url',
     ];
+
+    public function products()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

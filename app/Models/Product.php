@@ -50,19 +50,17 @@ class Product extends Model
         return $product;
     }
 
-    public function uploadFile($id, $request)
+    public function uploadFile($product, $request)
     {
         foreach ($request->file('file') as $file) {
             $filemodel = new File();
             $filename = $file->getClientOriginalName();
-            $file->storeAs('public/products/product' . $id, $filename);
+            $file->storeAs('public/products/product' . $product->id, $filename);
+            $filemodel->product_id = $product->id;
             $filemodel->name = $filename;
-            $filemodel->model = 'product';
-            $filemodel->parameter = $id;
-            $filemodel->url = 'storage/products/product' . $id . '/' . $filename;
-            $filemodel->save();
+            $filemodel->url = 'storage/products/product' . $product->id . '/' . $filename;
+            $product->files()->save($filemodel);
         }
-        $this->save();
     }
 
     public static function getResponseArray($products)

@@ -58,11 +58,9 @@ class ProductController extends Controller
             $brand = $product->brand;
             $array = [];
             $ids = [];
-            $files = File::where(['model' => 'product', 'parameter' => $product->id])
-                ->get();
-            foreach ($files as $file) {
-                $array[] = "http://127.0.0.1:8000/" . $file->url;
-                $ids[] = $file->id;
+            $testarray = [];
+            foreach ($product->files as $file) {
+                $array[$file->id] = "http://127.0.0.1:8000/" . $file->url;
             }
 
             return response()->json(
@@ -73,7 +71,6 @@ class ProductController extends Controller
                     'price' => $product->price,
                     'brand' => $brand['name'],
                     'images' => $array,
-                    "images_ids" => $ids,
                     'brand_id' => $brand['id'],
                     'brand_image' => $brand['image'],
                 ]
@@ -115,7 +112,7 @@ class ProductController extends Controller
 
         try {
             $product = Product::find($id);
-            $product->uploadFile($id, $request);
+            $product->uploadFile($product, $request);
             return response()->json([
                 "success" => true,
                 "message" => "File successfully uploaded",
@@ -129,9 +126,9 @@ class ProductController extends Controller
     {
         $file = File::find($id)->first();
         $file->delete();
-        if(file_exists($file->url)){
+        if (file_exists($file->url)) {
             unlink($file->url);
-        } 
+        }
         return response()->json(['status' => 'image deleted']);
     }
 
@@ -193,12 +190,6 @@ class ProductController extends Controller
 
     public static function purchaseProduct(Request $request)
     {
-        try {
-            ClientProduct::purchase($request);
-            return response()->json(['status' => 'success']);
-        } catch (\Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()]);
-        }
     }
 
     public static function getProductsHistory($client_id)
