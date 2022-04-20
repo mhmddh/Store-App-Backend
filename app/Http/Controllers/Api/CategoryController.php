@@ -23,7 +23,7 @@ class CategoryController extends Controller
                 ->orderBy($param, $order)
                 ->offset($limit * ($page - 1))
                 ->get();
-            $nbOfItems = count(Product::all());
+            $nbOfItems = count(Category::all());
             if ($all_categories) {
                 return response()->json(
                     [
