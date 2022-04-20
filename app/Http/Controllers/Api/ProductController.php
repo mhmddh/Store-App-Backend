@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
-use App\Models\ClientProduct;
 use App\Models\File;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -54,25 +53,33 @@ class ProductController extends Controller
     {
         try {
             $product = Product::find($id);
+            if (!$product) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Product not found !!'
+                ]);
+            }
             $category = $product->category;
             $brand = $product->brand;
             $array = [];
-            $ids = [];
-            $testarray = [];
             foreach ($product->files as $file) {
                 $array[$file->id] = "http://127.0.0.1:8000/" . $file->url;
             }
 
             return response()->json(
                 [
-                    'name' => $product->name,
-                    'category' => $category['name'],
-                    'category_id' => $category['id'],
-                    'price' => $product->price,
-                    'brand' => $brand['name'],
-                    'images' => $array,
-                    'brand_id' => $brand['id'],
-                    'brand_image' => $brand['image'],
+                    'product' => [
+                        'name' => $product->name,
+                        'category' => $category['name'],
+                        'category_id' => $category['id'],
+                        'price' => $product->price,
+                        'brand' => $brand['name'],
+                        'images' => $array,
+                        'brand_id' => $brand['id'],
+                        'brand_image' => $brand['image'],
+                    ],
+                    'success' => true,
+                    'message' => 'Product found successfully !!'
                 ]
             );
         } catch (\Exception $exception) {

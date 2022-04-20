@@ -11,12 +11,25 @@ class UserController extends Controller
 {
     public static function getUserDetails($id)
     {
-        $user = User::find($id);
         try {
+            $user = User::find($id);
+            if (!$user) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'User not found'
+                    ]
+                );
+            }
             return response()->json(
                 [
-                    'name' => $user->name,
-                    'email' => $user->email,
+                    'user' => [
+                        'name' => $user->name,
+                        'email' => $user->email
+                    ],
+                    
+                    'success' => true,
+                    'message' => 'User found successfully !!'
                 ]
             );
         } catch (\Exception $exception) {

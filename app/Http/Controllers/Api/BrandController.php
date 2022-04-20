@@ -60,14 +60,25 @@ class BrandController extends Controller
     {
         try {
             $brand = Brand::find($id);
+            if (!$brand) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Brand not found !!'
+                ]);
+            }
+
             if ($brand->image != '' | $brand->image != null) {
                 $brand->image = "http://127.0.0.1:8000" . $brand->image;
             }
             return response()->json(
                 [
-                    'id' => $brand->id,
-                    'name' => $brand->name,
-                    'image' => $brand->image,
+                    'brand' => [
+                        'id' => $brand->id,
+                        'name' => $brand->name,
+                        'image' => $brand->image,
+                    ],
+                    'success' => true,
+                    'message' => 'Brand found successfully !!'
                 ]
             );
         } catch (\Exception $exception) {

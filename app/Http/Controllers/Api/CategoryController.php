@@ -58,11 +58,22 @@ class CategoryController extends Controller
     {
         try {
             $category = Category::find($id);
-
+            if(!$category){
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Category not found !!',
+                    ]
+                );
+            }
             return response()->json(
                 [
-                    'id' => $category->id,
-                    'name' => $category->name,
+                    'category'=>[
+                        'id' => $category->id,
+                        'name' => $category->name,
+                    ],
+                    'success' => true,
+                    'message' => 'Category found successfully !!',
                 ]
             );
         } catch (\Exception $exception) {
