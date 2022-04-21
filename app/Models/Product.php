@@ -63,7 +63,7 @@ class Product extends Model
         }
     }
 
-    public static function getResponseArray($products)
+    public static function getResponse($products)
     {
         $array = [];
         $i = 0;
@@ -75,9 +75,9 @@ class Product extends Model
             $array[$i]['id'] = $product->id;
             $array[$i]['name'] = $product->name;
             $array[$i]['price'] = $product->price;
-            $array[$i]['brand'] = Brand::find($product['brand'])->first()->name;
+            $array[$i]['brand'] = $product->brand->name;
             $array[$i]['brand_image'] = $brand_image;
-            $array[$i]['category'] = Category::find($product['category'])->first()->name;
+            $array[$i]['category'] = $product->category->name;
             $array[$i]['created_at'] = $product->created_at->format('m/d/Y');
             $i++;
         }

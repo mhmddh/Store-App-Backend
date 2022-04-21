@@ -28,7 +28,7 @@ class ProductController extends Controller
                 ->offset($limit * ($page - 1))
                 ->get();
             $nbOfItems = count(Product::all());
-            $array = Product::getResponseArray($products);
+            $array = Product::getResponse($products);
             if ($all_products) {
                 return response()->json(
                     [
