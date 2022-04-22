@@ -25,7 +25,7 @@ class BrandController extends Controller
             $nbOfItems = count(Brand::all());
             foreach ($brands as $brand) {
                 if ($brand->image != '' | $brand->image != null) {
-                    $brand->image = "http://127.0.0.1:8000" . $brand->image;
+                    $brand->image = env('API_URL') . $brand->image;
                 }
             }
             if ($all_brands) {
@@ -51,7 +51,7 @@ class BrandController extends Controller
         try {
             $brands = Brand::all();
             foreach ($brands as $brand) {
-                $brand->image = '//127.0.0.1:8000'.$brand->image;
+                $brand->image = env('API_URL').$brand->image;
             }
             return response()->json($brands);
         } catch (\Exception $exception) {
@@ -71,7 +71,7 @@ class BrandController extends Controller
             }
 
             if ($brand->image != '' | $brand->image != null) {
-                $brand->image = "http://127.0.0.1:8000" . $brand->image;
+                $brand->image = env('API_URL') . $brand->image;
             }
             return response()->json(
                 [
@@ -178,7 +178,7 @@ class BrandController extends Controller
 
             foreach ($brands as $brand) {
                 if ($brand->image != '' | $brand->image != null) {
-                    $brand->image = "http://127.0.0.1:8000" . $brand->image;
+                    $brand->image = env('API_URL') . $brand->image;
                 }
             }
 

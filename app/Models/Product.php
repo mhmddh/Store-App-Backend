@@ -69,7 +69,7 @@ class Product extends Model
             $file->storeAs('public/products/product' . $product->id, $filename);
             $filemodel->product_id = $product->id;
             $filemodel->name = $filename;
-            $filemodel->url = 'storage/products/product' . $product->id . '/' . $filename;
+            $filemodel->url = '/storage/products/product' . $product->id . '/' . $filename;
             $product->files()->save($filemodel);
         }
     }
@@ -81,7 +81,7 @@ class Product extends Model
         foreach ($products as  $product) {
             $brand_image = Brand::find($product['brand'])->first()->image;
             if ($brand_image != '' | $brand_image != null) {
-                $brand_image = "http://127.0.0.1:8000" . $brand_image;
+                $brand_image = env('API_URL') . $brand_image;
             }
             $array[$i]['id'] = $product->id;
             $array[$i]['name'] = $product->name;

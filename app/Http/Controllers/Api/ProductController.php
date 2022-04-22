@@ -63,10 +63,10 @@ class ProductController extends Controller
             }
             $category = $product->category;
             $brand = $product->brand;
-            $brand->image = '//127.0.0.1:8000'.$brand->image;
+            $brand->image = env('API_URL').$brand->image;
             $array = [];
             foreach ($product->files as $file) {
-                $array[$file->id] = "http://127.0.0.1:8000/" . $file->url;
+                $array[$file->id] = env('API_URL') . $file->url;
             }
 
             return response()->json(
@@ -108,7 +108,6 @@ class ProductController extends Controller
             return response()->json([
                 "message" => "Product successfully created",
                 "product_id" => $product->id,
-                "images" => $product->images
 
             ]);
         } catch (\Exception $exception) {
