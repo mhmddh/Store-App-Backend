@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Client;
 use App\Models\File;
 use App\Models\Product;
