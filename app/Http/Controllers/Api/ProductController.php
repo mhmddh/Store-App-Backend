@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Client;
 use App\Models\File;
 use App\Models\Product;
@@ -61,6 +63,7 @@ class ProductController extends Controller
             }
             $category = $product->category;
             $brand = $product->brand;
+            $brand->image = '//127.0.0.1:8000'.$brand->image;
             $array = [];
             foreach ($product->files as $file) {
                 $array[$file->id] = "http://127.0.0.1:8000/" . $file->url;
@@ -91,8 +94,7 @@ class ProductController extends Controller
     {
         try {
             $product = Product::find($id);
-            $input = $request->all();
-            $product->update($input);
+            $product->updateProduct($request);
             return response()->json('updated successfully !!');
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
@@ -102,7 +104,7 @@ class ProductController extends Controller
     public static function createProduct(Request $request)
     {
         try {
-            $product = Product::create($request);
+            $product = Product::createProduct($request);
             return response()->json([
                 "message" => "Product successfully created",
                 "product_id" => $product->id,
@@ -131,7 +133,7 @@ class ProductController extends Controller
 
     public static function deleteFile($id)
     {
-        $file = File::find($id)->first();
+        $file = File::find($id);
         $file->delete();
         if (file_exists($file->url)) {
             unlink($file->url);

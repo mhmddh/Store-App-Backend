@@ -50,6 +50,9 @@ class BrandController extends Controller
     {
         try {
             $brands = Brand::all();
+            foreach ($brands as $brand) {
+                $brand->image = '//127.0.0.1:8000'.$brand->image;
+            }
             return response()->json($brands);
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);

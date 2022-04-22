@@ -39,7 +39,7 @@ class Product extends Model
     }
 
     //services:
-    public function create($request)
+    public function createProduct($request)
     {
         $product = new Product();
         $product->name = $request->get('name');
@@ -48,6 +48,17 @@ class Product extends Model
         $product->brand_id = $request->get('brand');
         $product->save();
         return $product;
+    }
+
+    public function updateProduct($request)
+    {
+        $input = $request->all();
+        $brand = Brand::find($input['brand']);
+        $category = Category::find($input['category']);
+        $this->brand()->associate($brand);
+        $this->category()->associate($category);
+        $this->update($input);
+        return $this;
     }
 
     public function uploadFile($product, $request)
