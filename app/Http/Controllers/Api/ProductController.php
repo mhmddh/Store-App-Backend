@@ -61,10 +61,10 @@ class ProductController extends Controller
             }
             $category = $product->category;
             $brand = $product->brand;
-            $brand->image = env('API_URL').$brand->image;
+            $brand->image = asset('storage/brands/' . $brand->image);
             $array = [];
             foreach ($product->files as $file) {
-                $array[$file->id] = env('API_URL') . $file->url;
+                $array[$file->id] = asset('storage/products/product' . $product->id . '/' . $file->name);
             }
 
             return response()->json(

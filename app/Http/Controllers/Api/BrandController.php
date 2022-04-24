@@ -25,7 +25,7 @@ class BrandController extends Controller
             $nbOfItems = count(Brand::all());
             foreach ($brands as $brand) {
                 if ($brand->image != '' | $brand->image != null) {
-                    $brand->image = env('API_URL') . $brand->image;
+                    $brand->image = asset('storage/brands/' . $brand->image);
                 }
             }
             if ($all_brands) {
@@ -51,7 +51,7 @@ class BrandController extends Controller
         try {
             $brands = Brand::all();
             foreach ($brands as $brand) {
-                $brand->image = env('API_URL').$brand->image;
+                $brand->image = asset('storage/brands/' . $brand->image);
             }
             return response()->json($brands);
         } catch (\Exception $exception) {
@@ -71,7 +71,7 @@ class BrandController extends Controller
             }
 
             if ($brand->image != '' | $brand->image != null) {
-                $brand->image = env('API_URL') . $brand->image;
+                $brand->image = asset('storage/brands/' . $brand->image);
             }
             return response()->json(
                 [
@@ -117,16 +117,12 @@ class BrandController extends Controller
     {
         try {
             $brand = Brand::find($id);
-            $file = $request->file('file');
-            $extension = $file->extension();
-            $filename = "brand" . $id . "." . $extension;
-            $request->file('file')->storeAs("public/brands", $filename);
-            $brand->image = "/storage/" . $filename;
+            $request->file->store('brands', 'public');
+            $brand->image = $request->file->hashName();
             $brand->save();
             return response()->json([
                 "success" => true,
                 "message" => "File successfully uploaded",
-                "file" => $file
             ]);
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
@@ -178,7 +174,7 @@ class BrandController extends Controller
 
             foreach ($brands as $brand) {
                 if ($brand->image != '' | $brand->image != null) {
-                    $brand->image = env('API_URL') . $brand->image;
+                    $brand->image = asset('storage/brands/' . $brand->image);
                 }
             }
 

@@ -65,11 +65,10 @@ class Product extends Model
     {
         foreach ($request->file('file') as $file) {
             $filemodel = new File();
-            $filename = $file->getClientOriginalName();
-            $file->storeAs('public/products/product' . $product->id, $filename);
+            $file->store('products/product'.$product->id, 'public');
             $filemodel->product_id = $product->id;
-            $filemodel->name = $filename;
-            $filemodel->url = '/storage/products/product' . $product->id . '/' . $filename;
+            $filemodel->name = $file->hashName();
+            $filemodel->url = $file->hashName();
             $product->files()->save($filemodel);
         }
     }
@@ -79,15 +78,15 @@ class Product extends Model
         $array = [];
         $i = 0;
         foreach ($products as  $product) {
-            $brand_image = Brand::find($product['brand'])->first()->image;
-            if ($brand_image != '' | $brand_image != null) {
-                $brand_image = env('API_URL') . $brand_image;
+            $brand = Brand::find($product['brand'])->first();
+            if ($brand->image != '' | $brand->image != null) {
+                $brand->image = asset('storage/brands/' . $brand->image);
             }
             $array[$i]['id'] = $product->id;
             $array[$i]['name'] = $product->name;
             $array[$i]['price'] = $product->price;
             $array[$i]['brand'] = $product->brand->name;
-            $array[$i]['brand_image'] = $brand_image;
+            $array[$i]['brand_image'] = $brand->image;
             $array[$i]['category'] = $product->category->name;
             $array[$i]['created_at'] = $product->created_at->format('m/d/Y');
             $i++;
