@@ -14,7 +14,7 @@ class File extends Model
 
     protected $fillable = [
         'name',
-        'url',
+        'product_id',
     ];
 
     public function products()

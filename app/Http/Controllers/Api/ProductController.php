@@ -175,7 +175,7 @@ class ProductController extends Controller
             $total_pages = ceil(count($all_products) / $limit);
             // return response()->json(count($products));
             if (count($products)) {
-                $array = Product::getResponseArray($products);
+                $array = Product::getResponse($products);
                 return response()->json(
                     [
                         'pages' => $total_pages,

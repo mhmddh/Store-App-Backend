@@ -78,7 +78,7 @@ class Product extends Model
         $array = [];
         $i = 0;
         foreach ($products as  $product) {
-            $brand = Brand::find($product['brand'])->first();
+            $brand = $product->brand;
             if ($brand->image != '' | $brand->image != null) {
                 $brand->image = asset('storage/brands/' . $brand->image);
             }
