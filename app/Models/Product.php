@@ -25,7 +25,7 @@ class Product extends Model
 
     public function files()
     {
-        return $this->belongsToMany(File::class);
+        return $this->hasMany(File::class);
     }
 
     public function category()
@@ -68,7 +68,6 @@ class Product extends Model
             $file->store('products/product'.$product->id, 'public');
             $filemodel->product_id = $product->id;
             $filemodel->name = $file->hashName();
-            $filemodel->url = $file->hashName();
             $product->files()->save($filemodel);
         }
     }

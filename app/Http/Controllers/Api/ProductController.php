@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\File;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -132,8 +133,8 @@ class ProductController extends Controller
     {
         $file = File::find($id);
         $file->delete();
-        if (file_exists($file->url)) {
-            unlink($file->url);
+        if (Storage::exists('public/products/product'.$file->product_id.'/'.$file->name)) {
+            Storage::delete('public/products/product'.$file->product_id.'/'.$file->name);
         }
         return response()->json(['status' => 'image deleted']);
     }
@@ -171,9 +172,8 @@ class ProductController extends Controller
                 ->get();
             $all_products = Product::where($key, 'LIKE', '%' . $value . '%')->get();
             $nbOfItems = count($all_products);
-
             $total_pages = ceil(count($all_products) / $limit);
-            // return response()->json(count($products));
+
             if (count($products)) {
                 $array = Product::getResponse($products);
                 return response()->json(

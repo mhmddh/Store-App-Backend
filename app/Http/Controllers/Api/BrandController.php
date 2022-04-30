@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BrandController extends Controller
 {
@@ -132,8 +133,8 @@ class BrandController extends Controller
     {
         try {
             $brand = Brand::find($id);
-            if (file_exists(public_path($brand->image))) {
-                unlink(public_path($brand->image));
+            if (Storage::exists('public/' . $brand->image)) {
+                Storage::delete('public/' . $brand->image);
             }
             if ($brand) {
                 $brand->delete();
