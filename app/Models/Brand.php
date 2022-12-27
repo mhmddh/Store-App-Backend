@@ -18,7 +18,7 @@ class Brand extends Model
         'image',
     ];
 
-    public function create($request)
+    public static function create($request)
     {
         $brand = new Brand();
         $brand->name = $request->get('name');

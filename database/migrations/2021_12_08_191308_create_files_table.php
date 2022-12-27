@@ -10,8 +10,8 @@ class CreateFilesTable extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('file_path')->nullable();
+            $table->string('name');
+            $table->string('product_id');
             $table->timestamps();
         });
     }

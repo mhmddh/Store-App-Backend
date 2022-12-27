@@ -19,7 +19,6 @@ class CreateProductsTable extends Migration
             $table->decimal('price');
             $table->bigInteger('category_id');
             $table->bigInteger('brand_id');
-            $table->string('image');
             $table->timestamps();
         });
     }

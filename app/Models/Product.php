@@ -39,7 +39,7 @@ class Product extends Model
     }
 
     //services:
-    public function createProduct($request)
+    public static function createProduct($request)
     {
         $product = new Product();
         $product->name = $request->get('name');
