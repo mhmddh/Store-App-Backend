@@ -39,25 +39,24 @@ class Product extends Model
     }
 
     //services:
-    public static function createProduct($request)
+    public static function createProduct($details)
     {
         $product = new Product();
-        $product->name = $request->get('name');
-        $product->price = $request->get('price');
-        $product->category_id = $request->get('category');
-        $product->brand_id = $request->get('brand');
+        $product->name = $details('name');
+        $product->price = $details('price');
+        $product->category_id = $details('category');
+        $product->brand_id = $details('brand');
         $product->save();
         return $product;
     }
 
-    public function updateProduct($request)
+    public function updateProduct($newDetails)
     {
-        $input = $request->all();
-        $brand = Brand::find($input['brand']);
-        $category = Category::find($input['category']);
+        $brand = Brand::find($newDetails['brand']);
+        $category = Category::find($newDetails['category']);
         $this->brand()->associate($brand);
         $this->category()->associate($category);
-        $this->update($input);
+        $this->update($newDetails);
         return $this;
     }
 
@@ -77,15 +76,14 @@ class Product extends Model
         $array = [];
         $i = 0;
         foreach ($products as  $product) {
-            $brand = $product->brand;
-            if ($brand->image != '' | $brand->image != null) {
-                $brand->image = asset('storage/brands/' . $brand->image);
+            if ($product->brand->image != '' | $product->brand->image != null) {
+                $product->brand->image = asset('storage/brands/' . $product->brand->image);
             }
             $array[$i]['id'] = $product->id;
             $array[$i]['name'] = $product->name;
             $array[$i]['price'] = $product->price;
             $array[$i]['brand'] = $product->brand->name;
-            $array[$i]['brand_image'] = $brand->image;
+            $array[$i]['brand_image'] = $product->brand->image;
             $array[$i]['category'] = $product->category->name;
             $array[$i]['created_at'] = $product->created_at->format('m/d/Y');
             $i++;

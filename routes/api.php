@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,23 +40,21 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/products', [ProductController::class, 'getPaginatedProducts'])->name('products');
 
-    Route::post('/purchase', [ProductController::class, 'purchaseProduct'])->name('purchase');
-
     Route::post('/create-product', [ProductController::class, 'createProduct'])->name('create-product');
 
-    Route::get('/products-history/{id}', [ProductController::class, 'getProductsHistory'])->name('products-history');
+    Route::get('/products-history/{id}', [ProductController::class, 'getClientProducts'])->name('client-products');
 
     Route::delete('/delete-product/{id}', [ProductController::class, 'deleteProduct'])->name('delete-product');
 
-    Route::get('/edit-product/{id}', [ProductController::class, 'getProduct'])->name('edit-product');
+    Route::get('/edit-product/{id}', [ProductController::class, 'getProductById'])->name('edit-product');
 
     Route::put('/update-product/{id}', [ProductController::class, 'updateProduct'])->name('update-product');
 
     Route::get('/search-product', [ProductController::class, 'searchProduct'])->name('search-product');
 
-    Route::post('/upload-product-files/{id}', [ProductController::class, 'uploadFile'])->name('upload-product-files');
+    Route::post('/upload-product-files/{id}', [FileController::class, 'uploadFile'])->name('upload-product-files');
 
-    Route::delete('/delete-product-file/{id}', [ProductController::class, 'deleteFile'])->name('delete-file');
+    Route::delete('/delete-product-file/{id}', [FileController::class, 'deleteFile'])->name('delete-file');
 
     //Category Apis :
 
