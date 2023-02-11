@@ -36,7 +36,8 @@ class CategoryController extends Controller
     public function getAllCategories()
     {
         try {
-            $this->categoryRepository->getAllCategories();
+            $categories = $this->categoryRepository->getAllCategories();
+            return response()->json($categories);
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }

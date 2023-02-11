@@ -38,7 +38,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function getAllCategories()
     {
         $categories = Category::all();
-        return response()->json($categories);
+        return $categories;
     }
 
     public function getCategoryById($categoryId)
