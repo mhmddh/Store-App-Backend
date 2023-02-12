@@ -25,6 +25,7 @@ Login API
                 $success['id'] = $user->id;
                 $success['token'] = $user->createToken('auth-token')->plainTextToken;
                 $success['name'] = $user->name;
+                $success['email'] = $user->email    ;
 
                 return response()->json([
                     'status' => 'success',
