@@ -42,10 +42,10 @@ class Product extends Model
     public static function createProduct($details)
     {
         $product = new Product();
-        $product->name = $details('name');
-        $product->price = $details('price');
-        $product->category_id = $details('category');
-        $product->brand_id = $details('brand');
+        $product->name = $details['name'];
+        $product->price = $details['price'];
+        $product->category_id = $details['category'];
+        $product->brand_id = $details['brand'];
         $product->save();
         return $product;
     }

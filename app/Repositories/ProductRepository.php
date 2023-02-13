@@ -92,9 +92,9 @@ class ProductRepository implements ProductRepositoryInterface
         $product = Product::find($productId);
         if ($product) {
             $product->delete();
-            return ['status' => 'Succesfully deleted'];
+            return ['success' => true, 'status' => 'Succesfully deleted'];
         } else {
-            return ['status' => 'Product Not found'];
+            return ['success' => false, 'status' => 'Product Not found'];
         }
     }
 

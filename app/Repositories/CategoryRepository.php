@@ -84,9 +84,9 @@ class CategoryRepository implements CategoryRepositoryInterface
         $category = Category::find($categoryId);
         if ($category) {
             $category->delete();
-            return 'Succesfully deleted';
+            return ['success' => true, 'status' => 'Succesfully deleted'];
         } else {
-            return 'Category Not Found';
+            return ['success' => false, 'status' => 'Product Not found'];
         }
     }
 

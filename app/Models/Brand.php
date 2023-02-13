@@ -21,7 +21,7 @@ class Brand extends Model
     public static function create($request)
     {
         $brand = new Brand();
-        $brand->name = $request->get('name');
+        $brand->name = $request['name'];
         $brand->image = '';
         $brand->save();
         return $brand;

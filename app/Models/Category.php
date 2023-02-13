@@ -15,11 +15,10 @@ class Category extends Model
         'name',
     ];
 
-    public static function create($request){
+    public static function create($request)
+    {
         $category = new Category();
-        $category->name =$request->get('name');
+        $category->name = $request['name'];
         $category->save();
     }
-
-    
 }
